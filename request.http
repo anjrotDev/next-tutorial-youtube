@@ -1,0 +1,41 @@
+GET https://backend-next-tutorial-fay6a.ondigitalocean.app/api/v1/health HTTP/1.1
+
+### Revenues
+GET https://backend-next-tutorial-fay6a.ondigitalocean.app/api/v1/revenues HTTP/1.1
+Authorization: Bearer 
+
+### Invoices Count
+GET https://backend-next-tutorial-fay6a.ondigitalocean.app/api/v1/invoices/count HTTP/1.1
+Authorization: Bearer 
+
+### Invoices
+GET https://backend-next-tutorial-fay6a.ondigitalocean.app/api/v1/invoices HTTP/1.1
+Authorization: Bearer 
+
+### Customers Count
+GET https://backend-next-tutorial-fay6a.ondigitalocean.app/api/v1/customer/count HTTP/1.1
+Authorization: Bearer 
+
+### Status Count
+GET https://backend-next-tutorial-fay6a.ondigitalocean.app/api/v1/invoices/status-count HTTP/1.1
+Authorization: Bearer 
+
+### Register
+POST https://backend-next-tutorial-fay6a.ondigitalocean.app/api/v1/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "nextTutorial",
+  "username": "nextTutorial",
+  "email": "nextTutorial@test.com",
+  "password": "123456"
+}
+
+### Login
+POST https://backend-next-tutorial-fay6a.ondigitalocean.app/api/v1/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "nextTutorial@test.com",
+  "password": "123456"
+}

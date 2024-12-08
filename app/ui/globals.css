@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.primary_text {
+  padding: 10px;
+  text-align: center;
+  background-color: yellow;
+  font-size: 1.5rem;
+}

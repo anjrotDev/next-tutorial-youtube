@@ -1,0 +1,11 @@
+{
+  "window.zoomLevel": 3,
+  "gitlens.currentLine.enabled": false,
+  "gitlens.hovers.currentLine.changes": false,
+  "gitlens.currentLine.pullRequests.enabled": false,
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.importModuleSpecifierEnding": "auto"
+}
