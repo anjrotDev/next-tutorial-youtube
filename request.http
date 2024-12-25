@@ -12,6 +12,23 @@ Authorization: Bearer
 GET https://backend-next-tutorial-fay6a.ondigitalocean.app/api/v1/invoices HTTP/1.1
 Authorization: Bearer 
 
+### Invoices
+GET https://backend-next-tutorial-fay6a.ondigitalocean.app/api/v1/invoice/6765bd4290a82bd45ae0b0bd HTTP/1.1
+Authorization: Bearer  
+
+### Invoices paginate
+GET https://backend-next-tutorial-fay6a.ondigitalocean.app/api/v1/invoices/paginate HTTP/1.1
+Authorization: Bearer 
+
+### Invoices invoice-total-pages
+GET https://backend-next-tutorial-fay6a.ondigitalocean.app/api/v1/invoices/page-count?q=bra HTTP/1.1
+Authorization: Bearer 
+
+
+### Customers
+GET https://backend-next-tutorial-fay6a.ondigitalocean.app/api/v1/customer HTTP/1.1
+Authorization: Bearer 
+
 ### Customers Count
 GET https://backend-next-tutorial-fay6a.ondigitalocean.app/api/v1/customer/count HTTP/1.1
 Authorization: Bearer 
