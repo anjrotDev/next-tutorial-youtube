@@ -1,6 +1,9 @@
 "use server";
 
+import { authHeaders } from "@/app/helpers/utils";
+import { auth, signIn } from "@/auth";
 import { CreateFormState } from "anjrot-components";
+import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -21,6 +24,7 @@ const CreateInvoice = FormSchema.omit({ id: true, date: true });
 const UpdateInvoice = FormSchema.omit({ date: true });
 
 export const createInvoice = async (prevState: CreateFormState, formData: FormData) => {
+  const session = await auth();
   const validatedFields = CreateInvoice.safeParse({
     customerId: formData.get("customerId"),
     amount: formData.get("amount"),
@@ -47,11 +51,7 @@ export const createInvoice = async (prevState: CreateFormState, formData: FormDa
 
   try {
     await fetch(`${process.env.BACKEND_URL}/invoices`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NGVmNzAwMmYzNGFjMWVlY2UxNzc2ZCIsImVtYWlsIjoibmV4dFR1dG9yaWFsQHRlc3QuY29tIiwibmFtZSI6Im5leHRUdXRvcmlhbCIsImlhdCI6MTczMzIyODM3M30.tlMGUN7S06L2fT1-We-IacbNnux5c0jK5MFCmyhYkBo"
-      },
+      headers: authHeaders(session?.user?.token),
       method: "POST",
       body: JSON.stringify(body)
     });
@@ -65,7 +65,7 @@ export const createInvoice = async (prevState: CreateFormState, formData: FormDa
 };
 
 export const updateInvoice = async (prevState: CreateFormState, formData: FormData) => {
-  console.log("formData :>> ", formData);
+  const session = await auth();
   const validatedFields = UpdateInvoice.safeParse({
     id: formData.get("invoiceId"),
     customerId: formData.get("customerId"),
@@ -91,11 +91,7 @@ export const updateInvoice = async (prevState: CreateFormState, formData: FormDa
 
   try {
     await fetch(`${process.env.BACKEND_URL}/invoices/${id}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NGVmNzAwMmYzNGFjMWVlY2UxNzc2ZCIsImVtYWlsIjoibmV4dFR1dG9yaWFsQHRlc3QuY29tIiwibmFtZSI6Im5leHRUdXRvcmlhbCIsImlhdCI6MTczMzIyODM3M30.tlMGUN7S06L2fT1-We-IacbNnux5c0jK5MFCmyhYkBo"
-      },
+      headers: authHeaders(session?.user?.token),
       method: "PUT",
       body: JSON.stringify(body)
     });
@@ -109,15 +105,12 @@ export const updateInvoice = async (prevState: CreateFormState, formData: FormDa
 };
 
 export const deleteInvoice = async (formData: FormData) => {
+  const session = await auth();
   const id = formData.get("invoiceId");
 
   try {
     await fetch(`${process.env.BACKEND_URL}/invoices/${id}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NGVmNzAwMmYzNGFjMWVlY2UxNzc2ZCIsImVtYWlsIjoibmV4dFR1dG9yaWFsQHRlc3QuY29tIiwibmFtZSI6Im5leHRUdXRvcmlhbCIsImlhdCI6MTczMzIyODM3M30.tlMGUN7S06L2fT1-We-IacbNnux5c0jK5MFCmyhYkBo"
-      },
+      headers: authHeaders(session?.user?.token),
       method: "DELETE"
     });
     revalidatePath("/dashboard/invoices");
@@ -125,5 +118,21 @@ export const deleteInvoice = async (formData: FormData) => {
     return {
       message: "Database Error: Failed to Update Invoice."
     };
+  }
+};
+
+export const authenticate = async (state: string | undefined, formData: FormData) => {
+  try {
+    await signIn("credentials", formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return "Invalid credentials.";
+        default:
+          return "Something went wrong.";
+      }
+    }
+    throw error;
   }
 };

@@ -1,5 +1,5 @@
 {
-  "window.zoomLevel": 3,
+  // "window.zoomLevel": 3,
   "gitlens.currentLine.enabled": false,
   "gitlens.hovers.currentLine.changes": false,
   "gitlens.currentLine.pullRequests.enabled": false,

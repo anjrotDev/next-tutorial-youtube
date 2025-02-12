@@ -1,15 +1,20 @@
-const headers = {
-  "Content-Type": "application/json",
-  Authorization:
-    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NGVmNzAwMmYzNGFjMWVlY2UxNzc2ZCIsImVtYWlsIjoibmV4dFR1dG9yaWFsQHRlc3QuY29tIiwibmFtZSI6Im5leHRUdXRvcmlhbCIsImlhdCI6MTczMzIyODM3M30.tlMGUN7S06L2fT1-We-IacbNnux5c0jK5MFCmyhYkBo"
-};
+import { authHeaders } from "@/app/helpers/utils";
+import { auth } from "@/auth";
 
 export const fetchCardData = async () => {
+  const session = await auth();
+  console.log("session fetchCardData:>> ", session?.user?.token);
   try {
     const [getCustomerCount, getInvoicesCount, getInvoicesStatusCount] = await Promise.all([
-      fetch(`${process.env.BACKEND_URL}/customer/count`, { headers }),
-      fetch(`${process.env.BACKEND_URL}/invoices/count`, { headers }),
-      fetch(`${process.env.BACKEND_URL}/invoices/status-count`, { headers })
+      fetch(`${process.env.BACKEND_URL}/customer/count`, {
+        headers: authHeaders(session?.user?.token)
+      }),
+      fetch(`${process.env.BACKEND_URL}/invoices/count`, {
+        headers: authHeaders(session?.user?.token)
+      }),
+      fetch(`${process.env.BACKEND_URL}/invoices/status-count`, {
+        headers: authHeaders(session?.user?.token)
+      })
     ]);
 
     const resultCustomerCount = await getCustomerCount.json();
@@ -34,8 +39,11 @@ export const fetchCardData = async () => {
 };
 
 export const fetchRevenue = async () => {
+  const session = await auth();
   try {
-    const fetchRevenue = await fetch(`${process.env.BACKEND_URL}/revenues`, { headers });
+    const fetchRevenue = await fetch(`${process.env.BACKEND_URL}/revenues`, {
+      headers: authHeaders(session?.user?.token)
+    });
     const revenueResult = await fetchRevenue.json();
     console.log("Fetching Revenue data...");
     await new Promise(resolve => setTimeout(resolve, 3000));
@@ -49,8 +57,11 @@ export const fetchRevenue = async () => {
 };
 
 export const fetchLatestInvoices = async () => {
+  const session = await auth();
   try {
-    const fetchInvoices = await fetch(`${process.env.BACKEND_URL}/invoices`, { headers });
+    const fetchInvoices = await fetch(`${process.env.BACKEND_URL}/invoices`, {
+      headers: authHeaders(session?.user?.token)
+    });
     const resultFetchInvoices = await fetchInvoices.json();
 
     return resultFetchInvoices;
@@ -61,9 +72,11 @@ export const fetchLatestInvoices = async () => {
 };
 
 export const fetchFilteredInvoices = async (query?: string, currentPage?: number) => {
-  console.log("currentPage :>> ", currentPage);
+  const session = await auth();
   try {
-    const fetchFilteredInvoices = await fetch(`${process.env.BACKEND_URL}/invoices/paginate?q=${query}&page=${currentPage}`, { headers });
+    const fetchFilteredInvoices = await fetch(`${process.env.BACKEND_URL}/invoices/paginate?q=${query}&page=${currentPage}`, {
+      headers: authHeaders(session?.user?.token)
+    });
     console.log("fetchFilteredInvoices :>> ", fetchFilteredInvoices.status);
     const resultfetchFilteredInvoices = await fetchFilteredInvoices.json();
 
@@ -75,8 +88,11 @@ export const fetchFilteredInvoices = async (query?: string, currentPage?: number
 };
 
 export const fetchInvoicesPages = async (query: string) => {
+  const session = await auth();
   try {
-    const getInvoicesPages = await fetch(`${process.env.BACKEND_URL}/invoices/page-count?q=${query}`, { headers });
+    const getInvoicesPages = await fetch(`${process.env.BACKEND_URL}/invoices/page-count?q=${query}`, {
+      headers: authHeaders(session?.user?.token)
+    });
     const resultGetInvoicesPages = await getInvoicesPages.json();
 
     return resultGetInvoicesPages;
@@ -87,8 +103,11 @@ export const fetchInvoicesPages = async (query: string) => {
 };
 
 export const fetchCustomers = async () => {
+  const session = await auth();
   try {
-    const getCustomers = await fetch(`${process.env.BACKEND_URL}/customer`, { headers });
+    const getCustomers = await fetch(`${process.env.BACKEND_URL}/customer`, {
+      headers: authHeaders(session?.user?.token)
+    });
     const resultGetCustomers = await getCustomers.json();
 
     return resultGetCustomers;
@@ -99,8 +118,11 @@ export const fetchCustomers = async () => {
 };
 
 export const fetchInvoiceById = async (id: string) => {
+  const session = await auth();
   try {
-    const getInvoiceById = await fetch(`${process.env.BACKEND_URL}/invoice/${id}`, { headers });
+    const getInvoiceById = await fetch(`${process.env.BACKEND_URL}/invoice/${id}`, {
+      headers: authHeaders(session?.user?.token)
+    });
     console.log("getInvoiceById :>> ", getInvoiceById.status);
     if (getInvoiceById.status === 404) return null;
     if (getInvoiceById.status !== 200) throw new Error("Error fetching invoice!!!");
