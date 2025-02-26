@@ -1,6 +1,6 @@
 export const authHeaders = (token?: string) => {
   return {
     "Content-Type": "application/json",
-    Authorization: `${token}`
+    Authorization: token ? `Bearer ${token}` : undefined
   };
 };
